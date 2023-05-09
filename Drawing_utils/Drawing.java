@@ -6,9 +6,9 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.ArrayList;
 
+// TODOs: Comments
 class Circle{
-    int x, y;
-    int radius;
+    int x, y, radius;
 
     public Circle(int x, int y, int radius){
         this.x = x;
@@ -31,6 +31,7 @@ public class Drawing extends JFrame{
     // "rec" or "cir"
     private String current_graphic;
 
+    // TODOs: name
     private int width = 800, height = 800;
 
     public Drawing(){
@@ -59,6 +60,7 @@ public class Drawing extends JFrame{
             @Override
             protected void paintComponent(Graphics g){
                 super.paintComponent(g);
+                // TODOs: functions
                 for(Rectangle rec:rectangles){
                     g.drawRect(rec.x, rec.y, rec.width, rec.height);
                 }
@@ -68,6 +70,7 @@ public class Drawing extends JFrame{
                 }
 
                 // drawing current rectangle in real time
+                // TODOs: consistant
                 if(currentRec != null)
                     g.drawRect(currentRec.x, currentRec.y, currentRec.width, currentRec.height);
                 if(currentCir != null)
@@ -117,7 +120,7 @@ public class Drawing extends JFrame{
                     repaint();
                 }
                 if(currentCir != null){
-                    double square = Math.pow((e.getX()-currentCir.x), 2) + Math.pow((e.getY()-currentCir.y), 2);
+                    // double square = Math.pow((e.getX()-currentCir.x), 2) + Math.pow((e.getY()-currentCir.y), 2);
                     // currentCir.radius = (int) Math.sqrt(square);
                     currentCir.radius = Math.max(e.getX()-currentCir.x, e.getY()-currentCir.y);
                     repaint();
