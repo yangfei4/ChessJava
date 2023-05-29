@@ -56,4 +56,9 @@ public class Board {
 
         return this.board[x][y];
     }
+
+    public void setSpot(int x, int y, Spot s){
+        this.board[x][y] = s;
+    }
+
 }
