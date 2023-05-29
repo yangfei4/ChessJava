@@ -21,8 +21,8 @@ public class Board {
 
         /* Assign some grids with a Spot(x,y,piece) for playes */ 
         for(int color=0; color<=1; color++){ // WHITE=0 BLACK=1
-            int row1 = (color==WHITE)?0:7;
-            int row2 = (color==WHITE)?1:6;
+            int row1 = (color==WHITE)?7:0;
+            int row2 = (color==WHITE)?6:1;
             // Rook
             this.board[row1][0] = new Spot(new Position(row1, 0), Optional.of(new Rook(color)));
             this.board[row1][7] = new Spot(new Position(row1, 7), Optional.of(new Rook(color)));
