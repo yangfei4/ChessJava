@@ -9,7 +9,6 @@ import Game.*;
 public class King extends Piece{
     // TODOs: add special attribute for different pieces
     public int KING_ID = Constants.KING_ID;
-    public int Piece_ID;
 
     public King(int color){
         super(color);
@@ -18,7 +17,7 @@ public class King extends Piece{
 
     @Override
     public boolean canMove(Board board, Spot start, Spot end){
-        int boardSize = Board.BOARDSIZE;
+        int boardSize = Constants.BOARD_SIZE;
         
         // Case1: out of bound
         if(end.getX()<0 || end.getX()>=boardSize||
@@ -39,5 +38,4 @@ public class King extends Piece{
     
         return possibleMove;
     };
-
 }

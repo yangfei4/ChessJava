@@ -5,11 +5,9 @@ import java.util.*;
 import Boards.*;
 import Game.*;
 
-
 public class Rook extends Piece{
     // TODOs: add special attribute for different pieces
     public int ROOK_ID = Constants.ROOK_ID;
-    public int Piece_ID;
 
     public Rook(int color){
         super(color);
@@ -18,7 +16,7 @@ public class Rook extends Piece{
 
     @Override
     public boolean canMove(Board board, Spot start, Spot end){
-        int boardSize = Board.BOARDSIZE;
+        int boardSize = Constants.BOARD_SIZE;
         
         // Case1: out of bound
         if(end.getX()<0 || end.getX()>=boardSize||
