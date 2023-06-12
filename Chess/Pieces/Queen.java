@@ -1,8 +1,5 @@
 package Pieces;
 
-import java.util.*;
-
-import Boards.*;
 import Game.*;
 
 
@@ -12,31 +9,19 @@ public class Queen extends Piece{
 
     public Queen(int color){
         super(color);
-        this.Piece_ID = QUEEN_ID;
+        this.pieceID = QUEEN_ID;
     }
 
     @Override
-    public boolean canMove(Board board, Spot start, Spot end){
-        int boardSize = Constants.BOARD_SIZE;
-        
-        // Case1: out of bound
-        if(end.getX()<0 || end.getX()>=boardSize||
-            end.getY()<0 || end.getY()>=boardSize)
-            return false;
-        // Case2: end position is same color
-        else if(end.getPiece().isPresent() && 
-                start.getPiece().get().getColor()==end.getPiece().get().getColor())
-            return false;
+    public String getSymbol(){
+        return (this.getColor()==WHITE)?"♕":"♛";
+    }
+
+
+    @Override
+    public boolean isLegitMove(int startx, int starty, int endx, int endy){
         
         return true;
     }
-
-    public List<Move> getPossibleMove(Position startPosition){
-        List<Move> possibleMove = new ArrayList<>();
-
-        // TODOs: modify this for each type of piece
-    
-        return possibleMove;
-    };
 
 }
