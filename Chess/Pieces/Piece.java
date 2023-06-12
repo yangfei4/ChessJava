@@ -1,22 +1,20 @@
 package Pieces;
 
-import Boards.*;
+import Game.*;
 
 public abstract class Piece {
-    public static final int WHITE=0;    
-    public static final int BLACK=1;
-    
-    protected int Piece_ID;
+    public int WHITE = Constants.WHITE;
+    protected int pieceID;
     private int color;
-    // private boolean killed;
+    private boolean killed;
 
     public Piece(int color){ //initialize piece
         if(color<0 || color>1)
             throw new IllegalArgumentException("Incorrect color number!");
         
         this.color = color;
-        this.Piece_ID = -1;
-        // this.killed = false;
+        this.pieceID = -1;
+        this.killed = false;
     }
 
     public int getColor(){
@@ -24,9 +22,15 @@ public abstract class Piece {
     }
 
     public int getPieceID(){
-        return this.Piece_ID;
+        return this.pieceID;
     }
-    // will be overwritten in specific piece class
-    public abstract boolean canMove(Board board, Spot start, Spot end);
+
+    public void setKilled(){
+        this.killed = true;
+    }
+
+    // will be overwritten in each piece class
+    public abstract String getSymbol();
+    public abstract boolean isLegitMove(int startx, int starty, int endx, int endy);
 
 }
