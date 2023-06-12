@@ -1,28 +1,33 @@
 package Boards;
 
-import java.util.*;
 import Pieces.Piece;
-import Game.*;
 
 public class Spot {
-    private Position positon;       // piece position
-    private Optional<Piece> piece; // piece type
+    private Piece piece; // piece type
+    private boolean hasPiece;
 
-    public Spot(Position position, Optional<Piece> piece){
+    public Spot(Piece piece){
         // Question: someone wrap these as three functions setX(), setY(), setPiece()
-        this.positon = position;
-        this.piece = piece; 
+        this.piece = piece;
+        this.hasPiece = piece==null?false:true;
     }
 
-    public Optional<Piece> getPiece(){
+    public Piece getPiece(){
         return this.piece;
     }
 
-    public int getX(){
-        return this.positon.getX();
+    public boolean hasPiece(){
+        return this.hasPiece;
+    }
+    
+    public void setPiece(Piece p){
+        this.piece = p;
+        this.hasPiece = true;
     }
 
-    public int getY(){
-        return this.positon.getY();
+    public void removePiece(){
+        this.piece = null;
+        this.hasPiece = false;
     }
+
 }
