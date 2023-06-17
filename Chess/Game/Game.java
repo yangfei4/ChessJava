@@ -1,149 +1,140 @@
 package Game;
 
-import Game.*;
 import Boards.*;
 import Pieces.*;
 
+import java.util.*;
+
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.desktop.SystemSleepEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.security.Principal;
 
-public class Game{
-    private int pawnId;
-    private int rookId;
-    private int knightId;
-    private int bishopId;
-    private int queenId;
-    private int kingId;
-    private int boardSize;
 
+public class Game implements MoveCallback{
     private Board board;
-    private JPanel selectedSquare;
-    private JPanel[][] canvas;
     private DrawBoard drawBoard;
+    private GAMESTATUS gameStatus;
 
     public Game(){
-        initConstants();
-
         this.board = new Board();
-        this.drawBoard = new DrawBoard(this.board);
-        this.canvas = drawBoard.getCanvas();
-
-        for(int row=0; row<boardSize; row++){
-            for(int col=0; col<boardSize; col++){
-                JPanel square = this.canvas[row][col];
-                square.addMouseListener(new SquareMouseListener());
-            }
-        }
-
+        this.drawBoard = new DrawBoard(this.board, this);
+        this.gameStatus = GAMESTATUS.WHITE_PLAY;
     }
 
-    private void initConstants(){
-        board = new Board();
+    @Override
+    public void Action(JPanel square) {
+        int[][] moveCoordinates;
+        List<int[][]> validMoves;
 
-        this.boardSize = Constants.BOARD_SIZE;
-        this.pawnId = Constants.PAWN_ID;
-        this.rookId = Constants.ROOK_ID;
-        this.knightId = Constants.KNIGHT_ID;
-        this.bishopId = Constants.BISHOP_ID;
-        this.queenId = Constants.QUEEN_ID;
-        this.kingId = Constants.KING_ID;
+        switch(gameStatus){
+            case WHITE_PLAY:
+                moveCoordinates = drawBoard.selectSquare(square, Constants.WHITE);
+                if(checkMoveVadility(moveCoordinates)){
+                    movePiece(moveCoordinates);
+                    if(board.isChecked(Constants.BLACK)){
+                        gameStatus = GAMESTATUS.BLACK_CHECKED;
+                        this.drawBoard.updateStatus("Black is checked!! ⚠⚠⚠");
+                    }
+                    else{
+                        gameStatus = GAMESTATUS.BLACK_PLAY;
+                        this.drawBoard.updateStatus("Black's turn");
+                        break;
+                    }
+                }
+                else
+                    break;
+            case BLACK_PLAY:
+                moveCoordinates = drawBoard.selectSquare(square, Constants.BLACK);
+                if(checkMoveVadility(moveCoordinates)){
+                    movePiece(moveCoordinates);
+                    if(board.isChecked(Constants.WHITE)){
+                        gameStatus = GAMESTATUS.WHITE_CHECKED;
+                        this.drawBoard.updateStatus("White is checked!! ⚠⚠⚠");
+                    }
+                    else{
+                        gameStatus = GAMESTATUS.WHITE_PLAY;
+                        this.drawBoard.updateStatus("White's turn");
+                        break;
+                    }                
+                }
+                else
+                    break;
+            case WHITE_CHECKED:
+                validMoves = board.getAllValidMoves(Constants.WHITE);
+                if (validMoves.isEmpty()) {
+                    // Handle the situation when white is checked and cannot escape check
+                    gameStatus = GAMESTATUS.BLACK_WIN;
+                    this.drawBoard.updateStatus("Checkmate! Black wins!");
+                    // Perform any other actions or display messages for a checkmate situation
+                } else {
+                    // Handle the situation when white is checked and can escape check
+                    gameStatus = GAMESTATUS.WHITE_PLAY;
+                }
+            case BLACK_CHECKED:
+                validMoves = board.getAllValidMoves(Constants.BLACK);
+                if (validMoves.isEmpty()) {
+                    // Handle the situation when black is checked and cannot escape check
+                    gameStatus = GAMESTATUS.WHITE_WIN;
+                    this.drawBoard.updateStatus("Checkmate! White wins!");
+                    // Perform any other actions or display messages for a checkmate situation
+                } else {
+                    // Handle the situation when black is checked and can escape check
+                    gameStatus = GAMESTATUS.BLACK_PLAY;
+                }
+            case WHITE_WIN:
+                break;
+            case BLACK_WIN:
+                break;
+        }
     }
 
-    // enum GameStatus{
-    //     ONGOING,
-    //     CHECK,
-    //     CHECKMATE,
-    //     // STALEMATE, //和棋
-    //     // DRAW, //平局
-    //     WHITE_WIN,
-    //     BLACK_WIN;
-    // }
+    public void movePiece(int[][] moveCoordinates){
+        int startRow=moveCoordinates[0][0], startCol=moveCoordinates[0][1];
+        int endRow=moveCoordinates[1][0], endCol=moveCoordinates[1][1];
+        //1.update board
+        Piece piece = board.getPiece(startRow, startCol);
+        board.setPiece(endRow, endCol, piece);
+        board.setPiece(startRow, startCol, null);
+        drawBoard.updateBoard(this.board);
 
-    private class SquareMouseListener implements MouseListener {
-        // MouseListener methods
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            // Handle mouse click on the square
-            JPanel square = (JPanel) e.getSource();
+        //2.repaint the canvas
+        JPanel selectedSquare = drawBoard.getSelectedSquare();
+        JPanel destinationSquare = drawBoard.getDestinationSquare();
+        drawBoard.erasePiece(selectedSquare);
+        drawBoard.drawPiece(destinationSquare, piece.getSymbol());
+        drawBoard.cleanSelection();
 
-            // first click to select a piece
-            if (selectedSquare == null) {
-                selectSquare(square);
-            }
-            // second click to move a selected piece
-            else{
-                operateSquare(square);
-            }
-        }
-        
-        public void selectSquare(JPanel square){
-            int[] rowCol = getRowCol(square);
-            int row = rowCol[0], col = rowCol[1];
-            
-            if(board.hasPiece(row, col)){
-                selectedSquare = square;
-                selectedSquare.setBackground(Color.GREEN);
-            }
+        if (piece instanceof King) {
+            board.setKingPosition(piece.getColor(), endRow, endCol);
         }
 
-        public void operateSquare(JPanel square){
-            // Second click - move piece
+        String c =(piece.getColor()==Constants.WHITE)?"White":"Black";
+        System.out.println(c + " moved");
+        System.out.println(Arrays.deepToString(moveCoordinates));
+    }
 
-            int[] pre_rowCol = getRowCol(selectedSquare);
-            int pre_row = pre_rowCol[0], pre_col = pre_rowCol[1];
+    public boolean checkMoveVadility(int[][] moveCoordinates){
+        int startRow=moveCoordinates[0][0], startCol=moveCoordinates[0][1];
 
-            Piece piece = board.getPiece(pre_row, pre_col);
+        // only selected square, haven't move
+        if(startCol==-1)
+            return false;
 
-            int[] rowCol = getRowCol(square);
-            int row = rowCol[0], col = rowCol[1];
+        Piece piece = board.getPiece(startRow, startCol);
+        // not follow the rule of piece movement
+        if(piece==null)
+            System.out.println("Piece is null!!!");
+        else if(!piece.isLegitMove(moveCoordinates, board))
+            return false;
 
-            if(piece.isLegitMove(pre_col, pre_col, row, col)){
+        if(piece instanceof Pawn)
+            piece.setMoved();
+        return true;
+    }
 
-                // remove piece from its original position
-                board.setPiece(pre_row, pre_col, null);
-                
-                // move piece to end position
-                board.setPiece(row, col, piece);
-
-                // clean previous squares
-                drawBoard.erasePiece(selectedSquare);
-                
-                // repaint current square
-                drawBoard.drawPiece(square, piece.getSymbol());
-            }
-
-            // reset the first clicked square
-            selectedSquare.setBackground((pre_row + pre_col) % 2 == 0 ? Color.WHITE : Color.GRAY);
-            selectedSquare = null;
-        }
-
-        private int[] getRowCol(JPanel square) {
-            int row = (square.getY() + 30) / square.getWidth();
-            int col = (square.getX() + 30) / square.getWidth();
-            int[] rowCol = {row, col};
-            return rowCol;
-        }
-        
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-        }
+    enum GAMESTATUS{
+        WHITE_PLAY, BLACK_PLAY, WHITE_CHECKED, BLACK_CHECKED, WHITE_WIN, BLACK_WIN
+        // CHECKMATE
+        // STALEMATE, //和棋
+        // DRAW, //平局
     }
 
     public static void main(String[] args) {
