@@ -4,12 +4,10 @@ import Pieces.Piece;
 
 public class Spot {
     private Piece piece; // piece type
-    private boolean hasPiece;
 
     public Spot(Piece piece){
         // Question: someone wrap these as three functions setX(), setY(), setPiece()
         this.piece = piece;
-        this.hasPiece = piece==null?false:true;
     }
 
     public Piece getPiece(){
@@ -17,17 +15,15 @@ public class Spot {
     }
 
     public boolean hasPiece(){
-        return this.hasPiece;
+        return this.piece==null?false:true;
     }
     
     public void setPiece(Piece p){
         this.piece = p;
-        this.hasPiece = true;
     }
 
     public void removePiece(){
         this.piece = null;
-        this.hasPiece = false;
     }
 
 }
