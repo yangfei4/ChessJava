@@ -28,9 +28,7 @@ mvn clean test
 │   ├── main
 │   │   ├── java
 │   │   │   ├── Boards
-│   │   │   │   ├── Board.class
 │   │   │   │   ├── Board.java
-│   │   │   │   ├── Spot.class
 │   │   │   │   └── Spot.java
 │   │   │   ├── Drawing_utils
 │   │   │   │   └── Drawing.java
@@ -59,4 +57,5 @@ mvn clean test
 │       │   ├── RookUnitTest.java
 │       │   └── SpotUnitTest.java
 │       └── resources
+├────────────────────────────────
 ```
