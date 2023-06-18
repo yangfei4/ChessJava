@@ -42,7 +42,7 @@ public class Bishop extends Piece{
             }
     
             // Check if the destination square is empty or occupied by an opponent's piece
-            if (!board.hasPiece(endRow, endCol) || board.getPiece(endRow, endCol).getColor() != this.getColor()) {
+            if (!board.hasPiece(endRow, endCol) || (board.getPiece(endRow, endCol).getColor() != this.getColor())) {
                 return true;
             }
         }
