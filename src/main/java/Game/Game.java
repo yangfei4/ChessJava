@@ -7,7 +7,6 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class Game implements MoveCallback{
     private Board board;
     private DrawBoard drawBoard;
@@ -84,6 +83,13 @@ public class Game implements MoveCallback{
             case BLACK_WIN:
                 break;
         }
+    }
+
+    @Override
+    public void restartGame() {
+        board = new Board();
+        drawBoard.updateBoard(board);
+        drawBoard.initCanvas();
     }
 
     public void movePiece(int[][] moveCoordinates){
