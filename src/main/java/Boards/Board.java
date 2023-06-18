@@ -167,15 +167,9 @@ public class Board {
         if (color == WHITE) {
             whiteKingRow = row;
             whiteKingCol = col;
-            System.out.println("WHITE KING was updated to");
-            System.out.println(row);
-            System.out.println(col);
         } else {
             blackKingRow = row;
             blackKingCol = col;
-            System.out.println("BLACK KING was updated to");
-            System.out.println(row);
-            System.out.println(col);
         }
     }
 
