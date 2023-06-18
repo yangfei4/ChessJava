@@ -2,7 +2,7 @@
 This repo is an implementation of chess playing using Java.
 
 <p align="center">
-  <img src="https://github.com/yangfei4/ChessJava/blob/main/visuals/chess_board.jpg" width="300">
+  <img src="https://github.com/yangfei4/ChessJava/blob/main/visuals/chess_demo.gif" width="600">
 </p>
 
 <p align="center">
@@ -11,6 +11,7 @@ This repo is an implementation of chess playing using Java.
 
 ## Commands to run the Game
 ```
+mvn clean compile
 java -cp target/classes Game.Game 
 ```
 
