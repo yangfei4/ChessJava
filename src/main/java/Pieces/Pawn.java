@@ -75,28 +75,40 @@ public class Pawn extends Piece{
     @Override
     public List<int[][]> getValidMoves(int startRow, int startCol, Board board) {
         List<int[][]> validMoves = new ArrayList<>();
-        // Possible movement directions for a bishop (diagonal)
-        int[][] directions = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+        int color = getColor();
+        int forwardDirection = color == WHITE ? -1 : 1;
     
-        for (int[] direction : directions) {
-            int row = startRow + direction[0];
-            int col = startCol + direction[1];
+        // Check if the pawn can move forward one step
+        int[][] forwardMoveCoordinates = {{startRow, startCol}, {startRow + forwardDirection, startCol}};
+        if (isLegitMove(forwardMoveCoordinates, board)) {
+            validMoves.add(forwardMoveCoordinates);
     
-            while (row >= 0 && row < 8 && col >= 0 && col < 8) {
-                int[][] moveCoordinates = {{startRow, startCol}, {row, col}};
-                if (isLegitMove(moveCoordinates, board)) {
-                    validMoves.add(moveCoordinates);
-                } else {
-                    break;
+            // Check if the pawn is at its starting position and can move forward two steps
+            if ((color == WHITE && startRow == 6) || (color != WHITE && startRow == 1)) {
+                int[][] doubleForwardMoveCoordinates = {{startRow, startCol}, {startRow + 2 * forwardDirection, startCol}};
+                if (isLegitMove(doubleForwardMoveCoordinates, board)) {
+                    validMoves.add(doubleForwardMoveCoordinates);
                 }
-    
-                row += direction[0];
-                col += direction[1];
             }
+        }
+    
+        // Check if the pawn can capture diagonally
+        int[][] diagonalCaptureCoordinates1 = {{startRow, startCol}, {startRow + forwardDirection, startCol + 1}};
+        int[][] diagonalCaptureCoordinates2 = {{startRow, startCol}, {startRow + forwardDirection, startCol - 1}};
+        if (startCol + 1 >=0 && startCol + 1 < 8 && 
+        board.hasPiece(diagonalCaptureCoordinates1[1][0], diagonalCaptureCoordinates1[1][1]) && 
+        board.getPiece(diagonalCaptureCoordinates1[1][0], diagonalCaptureCoordinates1[1][1]).getColor()!=color) {
+            validMoves.add(diagonalCaptureCoordinates1);
+        }
+        if (startCol - 1 >=0 && startCol - 1 < 8 && 
+        board.hasPiece(diagonalCaptureCoordinates2[1][0], diagonalCaptureCoordinates2[1][1]) && 
+        board.getPiece(diagonalCaptureCoordinates2[1][0], diagonalCaptureCoordinates2[1][1]).getColor()!=color) {
+            validMoves.add(diagonalCaptureCoordinates2);
         }
     
         return validMoves;
     }
+    
     
             
 }
