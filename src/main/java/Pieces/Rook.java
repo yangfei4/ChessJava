@@ -46,11 +46,19 @@ public class Rook extends Piece{
                 col += colDirection;
             }
     
+            // Check if the end position has a piece with the same color
+            if (board.hasPiece(endRow, endCol)) {
+                Piece piece = board.getPiece(endRow, endCol);
+                if (piece.getColor() == board.getPiece(startRow, startCol).getColor()) {
+                    return false; // Same color piece at the end position
+                }
+            }
+    
             return true;
         }
     
         return false;
-    }
+    }    
     
 
     public void setMoved(){
