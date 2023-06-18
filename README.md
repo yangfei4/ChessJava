@@ -2,7 +2,7 @@
 This repo is an implementation of chess playing using Java.
 
 <p align="center">
-  <img src="https://github.com/yangfei4/ChessJava/blob/main/visuals/chess_demo.gif" width="600">
+  <img src="https://github.com/yangfei4/ChessJava/blob/main/visuals/chess_demo.gif" width="400">
 </p>
 
 <p align="center">
