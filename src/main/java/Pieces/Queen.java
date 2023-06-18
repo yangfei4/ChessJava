@@ -38,6 +38,11 @@ public class Queen extends Piece{
                 col += colDirection;
             }
     
+            // Check if the end position has the same color
+            if (board.hasPiece(endRow, endCol) && board.getPiece(endRow, endCol).getColor() == getColor()) {
+                return false; // End position has a piece with the same color
+            }
+
             return true;
         }
     
@@ -64,6 +69,11 @@ public class Queen extends Piece{
                 col += colDirection;
             }
     
+            // Check if the end position has the same color
+            if (board.hasPiece(endRow, endCol) && board.getPiece(endRow, endCol).getColor() == getColor()) {
+                return false; // End position has a piece with the same color
+            }
+
             return true;
         }
     
