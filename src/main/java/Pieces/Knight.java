@@ -1,6 +1,5 @@
 package Pieces;
 
-import Game.Constants;
 import Boards.Board;
 import java.util.*;
 
@@ -22,6 +21,11 @@ public class Knight extends Piece{
         int endRow = moveCoordinates[1][0];
         int endCol = moveCoordinates[1][1];
     
+        // Check if the end position is not occupied by a piece with the same color
+        if (board.hasPiece(endRow, endCol) && board.getPiece(endRow, endCol).getColor() == this.getColor()) {
+            return false;
+        }
+
         // Check if the move is a valid knight move
         if (Math.abs(startRow - endRow) == 2 && Math.abs(startCol - endCol) == 1) {
             return true;
