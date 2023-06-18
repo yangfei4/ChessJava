@@ -40,12 +40,24 @@ public class DrawBoard extends JFrame{
         JPanel boardPanel = new JPanel(new GridLayout(boardSize, boardSize));
         add(boardPanel, BorderLayout.CENTER);
 
-        // statusLabel = new JLabel("<html><body style='width: 100px; text-align: center;'>White's turn</body></html>");
-        statusLabel = new JLabel("White's turn", SwingConstants.CENTER);
+        // Create a panel for the status label
+        JPanel statusPanel = new JPanel(new BorderLayout());
+        statusPanel.setPreferredSize(new Dimension(600, 75));
+        add(statusPanel, BorderLayout.SOUTH);
+
+        statusLabel = new JLabel("White's turn");
+        statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
         statusLabel.setFont(statusLabel.getFont().deriveFont(30f));
-        statusLabel.setPreferredSize(new Dimension(600, 75));
-        add(statusLabel, BorderLayout.SOUTH);
-        // statusLabel.setText("White's turn");
+        statusLabel.setPreferredSize(new Dimension(400, 75));
+        statusPanel.add(statusLabel, BorderLayout.WEST);
+
+        // Create the restart button
+        JButton restartButton = new JButton("Restart");
+        restartButton.setFont(restartButton.getFont().deriveFont(20f));
+        restartButton.setPreferredSize(new Dimension(200, 75));
+        // Create a panel for the restart button
+        statusPanel.add(restartButton, BorderLayout.EAST);
+        restartButton.addActionListener(e -> moveCallback.restartGame());
 
         // Initialize and Draw the chess board squares
         for (int x = 0; x < boardSize; x++) {
