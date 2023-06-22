@@ -50,7 +50,7 @@ mvn clean test
 │   └── test
 │       ├── java
 │       │   ├── BishopUnitTest.java
-│       │   ├── BoardTest.java
+│       │   ├── BoardUnitTest.java
 │       │   ├── KingUnitTest.java
 │       │   ├── KnightUnitTest.java
 │       │   ├── PawnUnitTest.java
