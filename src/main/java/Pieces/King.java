@@ -4,9 +4,6 @@ import Boards.Board;
 import java.util.*;
 
 public class King extends Piece{
-    private int kingRow; // King's row position
-    private int kingCol; // King's column position
-
     public King(int color){
         super(color);
     }
@@ -38,14 +35,6 @@ public class King extends Piece{
         }
     
         return false;
-    }
-
-    public int getKingRow() {
-        return kingRow;
-    }
-
-    public int getKingCol() {
-        return kingCol;
     }
 
     @Override

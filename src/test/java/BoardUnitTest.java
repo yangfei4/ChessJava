@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BoardTest {
+class BoardUnitTest {
     private Board board;
 
     @BeforeEach
