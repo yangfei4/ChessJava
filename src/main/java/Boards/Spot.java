@@ -6,7 +6,6 @@ public class Spot {
     private Piece piece; // piece type
 
     public Spot(Piece piece){
-        // Question: someone wrap these as three functions setX(), setY(), setPiece()
         this.piece = piece;
     }
 

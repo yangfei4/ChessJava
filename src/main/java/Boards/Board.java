@@ -58,12 +58,16 @@ public class Board {
         if(x<0 || y<0 || x>=BOARD_SIZE || y>=BOARD_SIZE){
             throw new IndexOutOfBoundsException("Index out of bound");
         }
-
-        return this.board[x][y].getPiece();
+        else
+            return this.board[x][y].getPiece();
     }
 
     public void setPiece(int x, int y, Piece p){
-        this.board[x][y].setPiece(p);
+        if(x<0 || y<0 || x>=BOARD_SIZE || y>=BOARD_SIZE){
+            throw new IndexOutOfBoundsException("Index out of bound");
+        }
+        else
+            this.board[x][y].setPiece(p);
     }
 
     public boolean hasPiece(int x, int y){
