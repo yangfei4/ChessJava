@@ -86,7 +86,6 @@ public class Board {
                 Piece piece = getPiece(x, y);
                 if (piece != null) {
                     if (piece.getColor()!= attackingColor && (piece instanceof Rook || piece instanceof Queen)) {
-                        System.out.println("King is under attack!");
                         return true; // Square is under attack by a Rook or Queen
                     } else {
                         break; // Path is blocked by another piece
@@ -107,7 +106,6 @@ public class Board {
                 Piece piece = getPiece(x, y);
                 if (piece != null) {
                     if (piece.getColor() != attackingColor && (piece instanceof Bishop || piece instanceof Queen)) {
-                        System.out.println("King is under attack!");
                         return true; // Square is under attack by a Bishop or Queen
                     } else {
                         break; // Path is blocked by another piece
@@ -127,7 +125,6 @@ public class Board {
             if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
                 Piece piece = getPiece(x, y);
                 if (piece != null && piece.getColor() != attackingColor && piece instanceof Knight) {
-                        System.out.println("King is under attack!");
                         return true; // Square is under attack by a Knight
                 }
             }
@@ -143,7 +140,6 @@ public class Board {
             if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
                 Piece piece = getPiece(x, y);
                 if (piece != null && piece.getColor() != attackingColor && piece instanceof Pawn) {
-                        System.out.println("King is under attack!");
                         return true; // Square is under attack by a Pawn
                 }
             }
@@ -158,7 +154,6 @@ public class Board {
             if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
                 Piece piece = getPiece(x, y);
                 if (piece != null && piece.getColor() != attackingColor && piece instanceof King) {
-                    System.out.println("King is under attack!");
                     return true; // Square is under attack by a King
                 }
             }
