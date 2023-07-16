@@ -11,77 +11,53 @@ public class Game implements MoveCallback{
     private Board board;
     private DrawBoard drawBoard;
     private GAMESTATUS gameStatus;
+    private int cur_color;
 
     public Game(){
         this.board = new Board();
         this.drawBoard = new DrawBoard(this.board, this);
-        this.gameStatus = GAMESTATUS.WHITE_PLAY;
+        this.gameStatus = GAMESTATUS.PLAY;
+        this.cur_color = Constants.WHITE;
     }
 
     @Override
     public void Action(JPanel square) {
-        int[][] moveCoordinates;
-        List<int[][]> validMoves;
-
         switch(gameStatus){
-            case WHITE_PLAY:
-                moveCoordinates = drawBoard.selectSquare(square, Constants.WHITE);
-                if(checkMoveVadility(moveCoordinates)){
-                    movePiece(moveCoordinates);
-                    if(board.isChecked(Constants.BLACK)){
-                        gameStatus = GAMESTATUS.BLACK_CHECKED;
-                        this.drawBoard.updateStatus("Black is checked!! ⚠⚠⚠");
-                    }
-                    else{
-                        gameStatus = GAMESTATUS.BLACK_PLAY;
-                        this.drawBoard.updateStatus("Black's turn");
-                        break;
-                    }
-                }
-                else
-                    break;
-            case BLACK_PLAY:
-                moveCoordinates = drawBoard.selectSquare(square, Constants.BLACK);
-                if(checkMoveVadility(moveCoordinates)){
-                    movePiece(moveCoordinates);
-                    if(board.isChecked(Constants.WHITE)){
-                        gameStatus = GAMESTATUS.WHITE_CHECKED;
-                        this.drawBoard.updateStatus("White is checked!! ⚠⚠⚠");
-                    }
-                    else{
-                        gameStatus = GAMESTATUS.WHITE_PLAY;
-                        this.drawBoard.updateStatus("White's turn");
-                        break;
-                    }                
-                }
-                else
-                    break;
-            case WHITE_CHECKED:
-                validMoves = board.getAllValidMoves(Constants.WHITE);
-                if (validMoves.isEmpty()) {
-                    // Handle the situation when white is checked and cannot escape check
-                    gameStatus = GAMESTATUS.BLACK_WIN;
-                    this.drawBoard.updateStatus("Checkmate! Black wins!");
-                    // Perform any other actions or display messages for a checkmate situation
-                } else {
-                    // Handle the situation when white is checked and can escape check
-                    gameStatus = GAMESTATUS.WHITE_PLAY;
-                }
-            case BLACK_CHECKED:
-                validMoves = board.getAllValidMoves(Constants.BLACK);
-                if (validMoves.isEmpty()) {
-                    // Handle the situation when black is checked and cannot escape check
-                    gameStatus = GAMESTATUS.WHITE_WIN;
-                    this.drawBoard.updateStatus("Checkmate! White wins!");
-                    // Perform any other actions or display messages for a checkmate situation
-                } else {
-                    // Handle the situation when black is checked and can escape check
-                    gameStatus = GAMESTATUS.BLACK_PLAY;
-                }
-            case WHITE_WIN:
-                break;
-            case BLACK_WIN:
-                break;
+            case PLAY:
+                play(square);
+            case CHECKED:
+                checked();
+        }
+    }
+
+    public void play(JPanel square){
+        int[][] moveCoordinates = drawBoard.selectSquare(square, cur_color);
+        int color_opponent = (cur_color==Constants.WHITE)?Constants.BLACK:Constants.WHITE;
+        String opponent = (cur_color==Constants.WHITE)?"Black":"White";
+
+        if(checkMoveVadility(moveCoordinates)){
+            movePiece(moveCoordinates);
+            if(board.isChecked(color_opponent)){
+                gameStatus = GAMESTATUS.CHECKED;
+                this.drawBoard.updateStatus(opponent + " is checked!! ⚠⚠⚠");
+            }
+            else{
+                this.drawBoard.updateStatus(opponent + "'s turn");
+            }
+            cur_color = color_opponent;
+        }
+    }
+
+    public void checked(){
+        List<int[][]> validMoves = board.getAllValidMoves(cur_color);
+        String opponent = (cur_color==Constants.WHITE)?"Black":"White";
+
+        if (validMoves.isEmpty()) {
+            this.drawBoard.updateStatus("Checkmate! "+ opponent + " wins!");
+            // Perform any other actions or display messages for a checkmate situation
+        } else {
+            // Handle the situation when white is checked and can escape check
+            gameStatus = GAMESTATUS.PLAY;
         }
     }
 
@@ -90,6 +66,8 @@ public class Game implements MoveCallback{
         board = new Board();
         drawBoard.updateBoard(board);
         drawBoard.initCanvas();
+        this.gameStatus = GAMESTATUS.PLAY;
+        this.cur_color = Constants.WHITE;
     }
 
     public void movePiece(int[][] moveCoordinates){
@@ -112,8 +90,7 @@ public class Game implements MoveCallback{
             board.setKingPosition(piece.getColor(), endRow, endCol);
         }
 
-        String c =(piece.getColor()==Constants.WHITE)?"White":"Black";
-        System.out.println(c + " moved");
+        System.out.println(piece.getSymbol() + " moved");
         System.out.println(Arrays.deepToString(moveCoordinates));
     }
 
@@ -137,7 +114,8 @@ public class Game implements MoveCallback{
     }
 
     enum GAMESTATUS{
-        WHITE_PLAY, BLACK_PLAY, WHITE_CHECKED, BLACK_CHECKED, WHITE_WIN, BLACK_WIN
+        PLAY, CHECKED
+        //WHITE_PLAY, BLACK_PLAY, WHITE_CHECKED, BLACK_CHECKED, WHITE_WIN, BLACK_WIN
         // CHECKMATE
         // STALEMATE, //和棋
         // DRAW, //平局
