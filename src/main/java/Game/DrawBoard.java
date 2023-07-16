@@ -29,13 +29,13 @@ public class DrawBoard extends JFrame{
         this.board = board;
         this.moveCallback = moveCallback;
         this.squares = new JPanel[boardSize][boardSize];
+        this.selectedSquare = null;
+        this.destinationSquare = null;
+        this.recommendation = null;
         initCanvas();        
     }
 
     public void initCanvas(){
-        this.selectedSquare = null;
-        this.destinationSquare = null;
-        this.recommendation = null;
         setSize(600, 675);
         setTitle("Chess Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,6 +87,30 @@ public class DrawBoard extends JFrame{
         }
 
         setVisible(true);
+    }
+
+    public void restartCanavs(){
+        this.selectedSquare = null;
+        this.destinationSquare = null;
+        this.recommendation = null;
+
+        // Initialize and Draw the chess board squares
+        for (int x = 0; x < boardSize; x++) {
+            for (int y = 0; y < boardSize; y++) {
+                JPanel square = squares[x][y];
+                erasePiece(square);
+
+                square.setBackground((x + y) % 2 == 0 ? Color.WHITE : Color.GRAY);
+
+                // Get symbol for a piece
+                if(board.hasPiece(x, y)){
+                    Piece cur_piece = board.getPiece(x, y);
+                    drawPiece(square, cur_piece.getSymbol()); // Set and repaint the piece
+                }
+                square.revalidate();
+                square.repaint();
+            }
+        }
     }
 
     private class SquareMouseListener implements MouseListener {

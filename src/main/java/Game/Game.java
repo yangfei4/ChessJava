@@ -65,7 +65,7 @@ public class Game implements MoveCallback{
     public void restartGame() {
         board = new Board();
         drawBoard.updateBoard(board);
-        drawBoard.initCanvas();
+        drawBoard.restartCanavs();
         this.gameStatus = GAMESTATUS.PLAY;
         this.cur_color = Constants.WHITE;
     }
