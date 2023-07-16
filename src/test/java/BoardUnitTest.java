@@ -95,14 +95,6 @@ class BoardUnitTest {
         // At the beginning, there 20 ways for openning
         assertEquals(20, whiteValidMovesCount); 
         
-
-        // for (int[][] move : validMoves) {
-        //     System.out.println("Valid move: (" + move[0][0] + ", " + move[0][1] + ") to (" + move[1][0] + ", " + move[1][1] + ")");
-        // }
-
-        // Test getting all valid moves for black
-        // int blackValidMovesCount = board.getAllValidMoves(Constants.BLACK).size();
-        // assertEquals(20, blackValidMovesCount);
         List<int[][]> validMovesBalck = board.getAllValidMoves(Constants.BLACK);
         int blackValidMovesCount = validMovesBalck.size();
         assertEquals(20, blackValidMovesCount);
