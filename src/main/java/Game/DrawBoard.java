@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.*;
+import java.util.List;
 
 import Pieces.*;
 import Boards.Board;
@@ -22,15 +23,19 @@ public class DrawBoard extends JFrame{
     private JLabel statusLabel;
 
     private MoveCallback moveCallback;
+    private List<int[][]> recommendation;
 
     public DrawBoard(Board board, MoveCallback moveCallback){
         this.board = board;
-        this.squares = new JPanel[boardSize][boardSize];
         this.moveCallback = moveCallback;
-        initCanvas();
+        this.squares = new JPanel[boardSize][boardSize];
+        initCanvas();        
     }
 
     public void initCanvas(){
+        this.selectedSquare = null;
+        this.destinationSquare = null;
+        this.recommendation = null;
         setSize(600, 675);
         setTitle("Chess Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -74,6 +79,8 @@ public class DrawBoard extends JFrame{
                     Piece cur_piece = board.getPiece(x, y);
                     drawPiece(square, cur_piece.getSymbol()); // Set and repaint the piece
                 }
+                square.revalidate();
+                square.repaint();
                 
                 squares[x][y] = square;
             }
@@ -115,14 +122,18 @@ public class DrawBoard extends JFrame{
 
         if((piece!=null && piece.getColor()==color)){
             cleanSelection();
+            cleanRecommendation();
             
             selectedSquare = square;
             selectedSquare.setBackground(Color.GREEN);
+            drawRecommendedMove(piece, row, col, board);
+
             return new int[][] {{-1, -1}, {-1, -1}}; // 第一次点击，返回无效坐标
         }
 
         if(selectedSquare!=null)
         {
+            cleanRecommendation();
             int[] pre_rowCol = getRowCol(selectedSquare);
             int pre_row = pre_rowCol[0], pre_col = pre_rowCol[1];
 
@@ -147,6 +158,33 @@ public class DrawBoard extends JFrame{
         // Repaint the square panel to reflect the changes
         square.revalidate();
         square.repaint();
+    }
+
+    public void drawRecommendedMove(Piece piece, int row, int col, Board board) {
+        recommendation = piece.getValidMoves(row, col, board);
+        for(int[][] move:recommendation){
+            JPanel sq = squares[move[1][0]][move[1][1]];
+
+            sq.setBackground(new Color(193, 255, 193));
+            // Repaint the square panel to reflect the changes
+            sq.revalidate();
+            sq.repaint();
+        }
+    }
+
+    public void cleanRecommendation(){
+        if(recommendation==null)
+            return;
+        // clean recommended moves
+        for(int[][] move:recommendation){
+            int row = move[1][0], col = move[1][1];
+            JPanel sq = squares[row][col];
+
+            sq.setBackground((row + col) % 2 == 0 ? Color.WHITE : Color.GRAY);
+            // Repaint the square panel to reflect the changes
+            sq.revalidate();
+            sq.repaint();
+        }
     }
 
     public int[] getRowCol(JPanel square) {
