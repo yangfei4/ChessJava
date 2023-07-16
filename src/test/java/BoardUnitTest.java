@@ -94,7 +94,7 @@ class BoardUnitTest {
         int whiteValidMovesCount = validMovesWhite.size();
         // At the beginning, there 20 ways for openning
         assertEquals(20, whiteValidMovesCount); 
-        
+
         List<int[][]> validMovesBalck = board.getAllValidMoves(Constants.BLACK);
         int blackValidMovesCount = validMovesBalck.size();
         assertEquals(20, blackValidMovesCount);
